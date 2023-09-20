@@ -7,6 +7,9 @@
         public static bool IsZeroOrNegative(int value) => value <= 0;
 
         public static bool IsPositive(int value) => value > 0;
+        public static bool IsPositive(double value) => value > 0.0;
+        public static bool IsPositive(decimal value) => value > 0M;
+
 
         /// <summary>
         /// Determines if a DateOnly is in the future, tomorrow or greater
