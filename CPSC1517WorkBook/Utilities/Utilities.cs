@@ -2,29 +2,9 @@
 {
     public static class Utilities
     {
-        public static bool IsZeroOrNegative(int value)
-        {
-            // Simple technique -> return expression
-            //return value <= 0; // true | false
+        public static bool IsNullEmptyOrWhiteSpace(string value) => string.IsNullOrWhiteSpace(value);
 
-            // Explicit technique -> declare all parts
-            //bool result;
-
-            //if (value <= 0)
-            //{
-            //    result = true;
-            //}
-            //else
-            //{
-            //    result = false;
-            //}
-
-            //return result;
-
-            // Simple but explicit -> conditional/ternary operator
-            return value <= 0 ? true : false;
-            //     if(        )  a  else  b ;
-        }
+        public static bool IsZeroOrNegative(int value) => value <= 0;
 
         public static bool IsPositive(int value) => value > 0;
 
