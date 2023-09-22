@@ -11,6 +11,7 @@ namespace Hockey.Data
         private DateOnly _dateOfBirth;
         private int _heightInInches;
         private int _weightInPounds;
+        private int _jerseyNumber;
 
         // properties
         public string BirthPlace
@@ -20,7 +21,7 @@ namespace Hockey.Data
                 return _birthPlace;
             }
 
-            set
+            private set
             {
                 if (Utilities.IsNullEmptyOrWhiteSpace(value))
                 {
@@ -39,7 +40,7 @@ namespace Hockey.Data
                 return _firstName;
             }
 
-            set
+            private set
             {
                 if (Utilities.IsNullEmptyOrWhiteSpace(value))
                 {
@@ -58,7 +59,7 @@ namespace Hockey.Data
                 return _lastName;
             }
 
-            set
+            private set
             {
                 if (Utilities.IsNullEmptyOrWhiteSpace(value))
                 {
@@ -77,7 +78,7 @@ namespace Hockey.Data
                 return _heightInInches;
             }
 
-            set
+            private set
             {
                 if (Utilities.IsZeroOrNegative(value))
                 {
@@ -95,7 +96,7 @@ namespace Hockey.Data
                 return _weightInPounds;
             }
 
-            set
+            private set
             {
                 if (!Utilities.IsPositive(value))
                 {
@@ -112,7 +113,7 @@ namespace Hockey.Data
                 return _dateOfBirth;
             }
 
-            set
+            private set
             {
                 if (Utilities.IsInTheFuture(value))
                 {
@@ -134,21 +135,6 @@ namespace Hockey.Data
         // constructors
 
         /// <summary>
-        /// Creates a default instance of a HockeyPlayer
-        /// </summary>
-        public HockeyPlayer()
-        {
-            _firstName = string.Empty;
-            _lastName = string.Empty;
-            _birthPlace = string.Empty;
-            _dateOfBirth = new DateOnly();
-            _weightInPounds = 0;
-            _heightInInches = 0;
-            Shot = Shot.Left;
-            Position = Position.Center;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="firstName"></param>
@@ -160,17 +146,44 @@ namespace Hockey.Data
         /// <param name="position"></param>
         /// <param name="shot"></param>
         public HockeyPlayer(string firstName, string lastName, string birthPlace, DateOnly dateOfBirth, 
-            int weightInPounds, int heightInInches, Position position = Position.Center, Shot shot = Shot.Left)
+            int weightInPounds, int heightInInches, int jerseyNumber, Position position = Position.Center, Shot shot = Shot.Left)
         {
             FirstName = firstName;
             LastName = lastName;
             BirthPlace = birthPlace;
             HeightInInches = heightInInches;
             WeightInPounds = weightInPounds;
+            JerseyNumber = jerseyNumber;
             DateOfBirth = dateOfBirth;
             Position = position;
             Shot = shot;
         }
 
+        public int JerseyNumber
+        {
+            get
+            {
+                return _jerseyNumber;
+            }
+
+            set
+            {
+                if (value < 1 || value > 98)
+                {
+                    throw new ArgumentOutOfRangeException("Jersey number must be between 1 and 98.",
+                        new ArgumentException());
+                }
+
+                _jerseyNumber = value;
+            }
+        }
+
+        public int Age => (DateOnly.FromDateTime(DateTime.Now).DayNumber - DateOfBirth.DayNumber) / 365;
+
+        // Override of ToString
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }
