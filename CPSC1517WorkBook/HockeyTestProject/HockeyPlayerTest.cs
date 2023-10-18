@@ -16,7 +16,7 @@ namespace Hockey.Test
         const Position PlayerPosition = Position.Center;
         const Shot PlayerShot = Shot.Left;
         static readonly DateOnly DateOfBirth = new DateOnly(1994, 01, 14);
-        const string ToStringValue = $"{FirstName} {LastName}";
+        string ToStringValue = $"{FirstName},{LastName},{JerseyNumber},{PlayerPosition},{PlayerShot},{HeightInInches},{WeightInPounds},Jan-14-1994,{BirthPlace}";
         readonly int Age = (DateOnly.FromDateTime(DateTime.Now).DayNumber - DateOfBirth.DayNumber) / 365;
 
         //[Fact]
@@ -135,6 +135,17 @@ namespace Hockey.Test
             actual = player.ToString();
 
             actual.Should().Be(ToStringValue);
+        }
+
+        [Fact]
+        public void HockeyPlayer_Parse_ParsesCorrectly()
+        {
+            HockeyPlayer actual;
+            
+            actual = HockeyPlayer.Parse(ToStringValue);
+
+            actual.Should().BeOfType<HockeyPlayer>();
+            actual.Should().NotBeNull();
         }
     }
 }
