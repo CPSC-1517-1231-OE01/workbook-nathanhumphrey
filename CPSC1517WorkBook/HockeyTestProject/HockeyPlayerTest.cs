@@ -9,7 +9,7 @@ namespace Hockey.Test
         // Constants for a test player
         const string FirstName = "Connor";
         const string LastName = "Brown";
-        const string BirthPlace = "Toronto, ON, CAN";
+        const string BirthPlace = "Toronto-ON-CAN";
         const int HeightInInches = 72;
         const int WeightInPounds = 188;
         const int JerseyNumber = 28;
@@ -147,5 +147,51 @@ namespace Hockey.Test
             actual.Should().BeOfType<HockeyPlayer>();
             actual.Should().NotBeNull();
         }
-    }
+
+		[Theory]
+		[InlineData(null)]
+		[InlineData("")]
+		[InlineData(" ")]
+		public void HockeyPlayer_Parse_ThrowsForNullEmptyOrWhiteSpace(string line)
+		{
+			Action act = () => HockeyPlayer.Parse(line);
+
+			act.Should().Throw<ArgumentNullException>().WithMessage("Line cannot be null or empty.");
+		}
+
+        [Fact]
+        public void HockeyPlayer_Parse_ThrowsForInvalidNumberOfFields()
+        {
+            string line = "one";
+
+            Action act = () => HockeyPlayer.Parse(line);
+
+            act.Should().Throw<InvalidDataException>().WithMessage("Incorrect number of fields.");
+        }
+
+        [Fact]
+        public void HockeyPlayer_Parse_ThrowsForFormatError()
+        {
+			string line = "one,two,three,four,five,six,seven,eight,nine";
+
+			Action act = () => HockeyPlayer.Parse(line);
+
+            // Don't forget, the asterisk is a wildcard
+			act.Should().Throw<FormatException>().WithMessage("Error parsing line*");
+		}
+
+        [Fact]
+        public void HockeyPlayer_TryParse_ParsesSuccessfully()
+        {
+            HockeyPlayer? actual;
+            bool result;
+
+            result = HockeyPlayer.TryParse(ToStringValue, out actual);
+
+            result.Should().BeTrue();
+            actual.Should().NotBeNull();
+        }
+
+        //TODO: create the false test
+	}
 }
