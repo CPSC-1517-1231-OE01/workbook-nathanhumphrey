@@ -5,7 +5,6 @@ using WestWindWebApp.Data;
 using WestWindSystem;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("WWDB");
