@@ -1,8 +1,5 @@
 ﻿@page "/products/{CategoryId:int?}"
 
-@using WestWindSystem.BLL
-@using WestWindSystem.Entities
-
 <h3>Products</h3>
 
 <fieldset class="mb-3">
@@ -23,6 +20,19 @@
 		</div>
 		<div class="cols-12">
 			<button class="btn btn-primary" @onclick="HandleCategorySelected">List Products</button>
+		</div>
+	</div>
+</fieldset>
+
+<fieldset class="mb-3">
+	<legend>Search for Products</legend>
+	<div class="row row-cols-lg-auto g-3 align-items-center">
+		<div class="cols-12">
+			<label class="visually-hidden" for="search">Search:</label>
+			<input class="form-control" type="text" id="search" @bind="PartialSearch" />
+		</div>
+		<div class="cols-12">
+			<button class="btn btn-primary" @onclick="HandlePartialSearch">Search for Products</button>
 		</div>
 	</div>
 </fieldset>
@@ -52,43 +62,4 @@
 			}
 		</tbody>
 	</table>
-}
-
-
-@code {
-	[Inject]
-	CategoryServices CategoryServices { get; set; }
-
-	[Inject]
-	ProductServices ProductServices { get; set; }
-
-	[Inject]
-	NavigationManager NavigationManager { get; set; }
-
-	public List<Category>? Categories { get; set; }
-	public List<Product>? Products { get; set; }
-
-	[Parameter]
-	public int CategoryId { get; set; }
-
-	protected override void OnInitialized()
-	{
-		Categories = CategoryServices.GetAllCategories();
-
-		if (CategoryId != 0)
-		{
-			Products = ProductServices.GetProductsByCategoryId(CategoryId);
-		}
-
-		base.OnInitialized();
-	}
-
-	private void HandleCategorySelected()
-	{
-		if (CategoryId != 0)
-		{
-			Products = ProductServices.GetProductsByCategoryId(CategoryId);
-			NavigationManager.NavigateTo($"/products/{CategoryId}");
-		}
-	}
 }

@@ -31,5 +31,15 @@ namespace WestWindSystem.BLL
 				.Include(p => p.Supplier)
 				.ToList<Product>();
 		}
+
+		public List<Product> GetProductsByNameOrSupplierName(string partial)
+		{
+			partial = partial.ToLower();
+			return _context.Products
+				.Where(p => p.ProductName.ToLower().Contains(partial)
+					|| p.Supplier.CompanyName.ToLower().Contains(partial))
+				.Include(p => p.Supplier)
+				.ToList<Product>();
+		}
 	}
 }
