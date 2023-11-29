@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using WestWindSystem.BLL;
 using WestWindSystem.Entities;
 
@@ -6,6 +7,9 @@ namespace WestWindWebApp.Pages
 {
 	public partial class ProductPage
 	{
+		[Inject]
+		IJSRuntime JSRuntime { get; set; }
+
 		[Inject]
 		ProductServices ProductServices { get; set; }
 
@@ -101,7 +105,8 @@ namespace WestWindWebApp.Pages
 		{
 			if (ValidateForm())
 			{
-				if (Product!.ProductId == 0) {
+				if (Product!.ProductId == 0)
+				{
 					try
 					{
 						ProductServices.AddProduct(Product);
@@ -131,18 +136,24 @@ namespace WestWindWebApp.Pages
 		/// <summary>
 		/// Handle form submission and discontinue a product
 		/// </summary>
-		private void HandleDiscontinue()
+		private async Task HandleDiscontinue()
 		{
 			if (Product!.ProductId != 0)
 			{
-				try
+				// Confirm with the user to discontinue
+				object[] confirmArg = new[] { "This action cannot be undone.\nAre you sure you want to continue?" };
+				bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", confirmArg);
+				if (confirm == true)
 				{
-					ProductServices.DiscontinueProduct(Product);
-					FeedbackMessage = "Product Successfully Discontinued";
-				}
-				catch (Exception ex)
-				{
-					Errors.Add("product-discontinue", ex.Message);
+					try
+					{
+						ProductServices.DiscontinueProduct(Product);
+						FeedbackMessage = "Product Successfully Discontinued";
+					}
+					catch (Exception ex)
+					{
+						Errors.Add("product-discontinue", ex.Message);
+					}
 				}
 			}
 		}
